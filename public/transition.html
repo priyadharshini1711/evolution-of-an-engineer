@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transition Film</title>
+    <meta name="description" content="A short animated film of the technical transition from 2019 to 2026." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /*
+        A self-contained, looping "film" of the transition, designed to be
+        embedded with an <iframe>. All sizes use vw so the frame scales with
+        the iframe's width. Edit SCENES in the script to change the content.
+      */
+      :root {
+        --bg: #07090c;
+        --fg: #e6edf3;
+        --muted: #8b98a9;
+        --faint: #5b6878;
+        --cyan: #22d3ee;
+        --violet: #8b7cf6;
+        --accent: var(--cyan);
+        --hair: rgba(148, 163, 184, 0.14);
+        color-scheme: dark;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; background: var(--bg); overflow: hidden; }
+      body {
+        color: var(--fg);
+        font-family: Inter, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+      /* Grid and light */
+      .grid {
+        position: absolute; inset: -6vw;
+        background-image:
+          linear-gradient(rgba(148,163,184,0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(148,163,184,0.06) 1px, transparent 1px);
+        background-size: 4vw 4vw;
+        animation: drift 30s linear infinite;
+        -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 30%, transparent 85%);
+        mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 30%, transparent 85%);
+      }
+      @keyframes drift { to { transform: translate3d(4vw, 4vw, 0); } }
+      .light {
+        position: absolute; width: 50vw; height: 50vw; border-radius: 50%;
+        right: -10vw; top: -15vw; filter: blur(9vw); opacity: 0.16;
+        background: var(--accent); transition: background-color 1.2s ease;
+      }
+
+      /* Chrome */
+      .top {
+        position: absolute; left: 4vw; right: 4vw; top: 3.4vw;
+        display: flex; justify-content: space-between; align-items: flex-start;
+      }
+      .eyebrow {
+        font-family: 'JetBrains Mono', monospace; font-size: 1.05vw;
+        letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+      }
+      .year {
+        font-family: 'JetBrains Mono', monospace; font-size: 3.6vw; line-height: 1;
+        color: var(--accent); transition: color 1s ease; font-variant-numeric: tabular-nums;
+      }
+      .year span { display: inline-block; animation: rise 0.6s cubic-bezier(.22,1,.36,1) both; }
+
+      /* Scenes */
+      .scene {
+        position: absolute; left: 4vw; right: 4vw; top: 10vw; bottom: 9vw;
+        display: grid; grid-template-columns: 1fr 1.1fr; gap: 4vw; align-items: center;
+        opacity: 0; visibility: hidden; transition: opacity 0.6s ease, visibility 0s 0.6s;
+      }
+      .scene.active { opacity: 1; visibility: visible; transition: opacity 0.6s ease 0.25s; }
+      .phase-no { font-family: 'JetBrains Mono', monospace; font-size: 1vw; color: var(--faint); letter-spacing: 0.2em; }
+      h2 {
+        margin-top: 1.2vw; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400;
+        font-size: 4.4vw; line-height: 1.02; letter-spacing: -0.01em;
+      }
+      .caption { margin-top: 1.6vw; font-size: 1.45vw; line-height: 1.5; color: var(--muted); max-width: 34vw; }
+      .tags { margin-top: 2vw; display: flex; flex-wrap: wrap; gap: 0.6vw; list-style: none; }
+      .tags li {
+        font-family: 'JetBrains Mono', monospace; font-size: 1vw; color: var(--muted);
+        border: 1px solid var(--hair); border-radius: 99px; padding: 0.35vw 1vw;
+      }
+      .active h2, .active .phase-no { animation: rise 0.8s cubic-bezier(.22,1,.36,1) both 0.3s; }
+      .active .caption { animation: rise 0.8s cubic-bezier(.22,1,.36,1) both 0.5s; }
+      .active .tags li { animation: rise 0.6s cubic-bezier(.22,1,.36,1) both; }
+      .active .tags li:nth-child(1) { animation-delay: 0.7s; }
+      .active .tags li:nth-child(2) { animation-delay: 0.8s; }
+      .active .tags li:nth-child(3) { animation-delay: 0.9s; }
+      .active .tags li:nth-child(4) { animation-delay: 1s; }
+      @keyframes rise { from { opacity: 0; transform: translateY(0.8vw); filter: blur(4px); } }
+
+      /* Visuals: final state is the base style; animations play in from it. */
+      .visual svg { width: 100%; height: auto; overflow: visible; }
+      .s { fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+      .m { fill: none; stroke: rgba(148,163,184,0.45); stroke-width: 1.1; }
+      .box { fill: #0d1117; stroke: rgba(148,163,184,0.5); stroke-width: 1.1; }
+      .boxa { fill: #0d1117; stroke: var(--accent); stroke-width: 1.2; }
+      .lbl { fill: var(--fg); font: 500 11px Inter, sans-serif; }
+      .sub { fill: var(--muted); font: 10px 'JetBrains Mono', monospace; }
+      .dot { fill: var(--accent); }
+
+      .active .draw { stroke-dasharray: 600; animation: draw 1.6s cubic-bezier(.65,0,.35,1) both; }
+      .active .draw.d2 { animation-delay: 0.4s; }
+      .active .draw.d3 { animation-delay: 0.8s; }
+      .active .draw.d4 { animation-delay: 1.2s; }
+      @keyframes draw { from { stroke-dashoffset: 600; } to { stroke-dashoffset: 0; } }
+
+      .active .pop { animation: pop 0.6s cubic-bezier(.22,1,.36,1) both; transform-box: fill-box; transform-origin: center; }
+      @keyframes pop { from { opacity: 0; transform: scale(0.4); } }
+      .active .pulse { animation: pulse 1.4s ease-in-out infinite 1.4s; transform-box: fill-box; transform-origin: center; }
+      @keyframes pulse { 50% { transform: scale(1.8); opacity: 0.3; } }
+
+      .active .slide { animation: slide 0.7s cubic-bezier(.22,1,.36,1) both; }
+      @keyframes slide { from { opacity: 0; transform: translateX(-24px); } }
+      .active .fade { animation: fade 0.8s ease both; }
+      @keyframes fade { from { opacity: 0; } }
+      .active .prune { animation: prune 2.6s ease both 0.6s; }
+      @keyframes prune { 0%, 40% { opacity: 1; } 100% { opacity: 0.08; } }
+
+      .active .flow { animation: flow 1.8s cubic-bezier(.45,0,.55,1) infinite; }
+      @keyframes flow { from { transform: translateX(0); opacity: 0; } 15%, 85% { opacity: 1; } to { transform: translateX(var(--dx)); opacity: 0; } }
+      .active .orbit { animation: spin 14s linear infinite; transform-origin: 200px 130px; }
+      .active .orbit .counter { animation: spin 14s linear infinite reverse; transform-box: fill-box; transform-origin: center; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* Finale */
+      .finale { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+      .finale h2 { font-size: 5.6vw; }
+      .finale .caption { max-width: none; font-family: 'JetBrains Mono', monospace; font-size: 1.3vw; letter-spacing: 0.12em; }
+      .line { position: relative; width: 70vw; height: 2px; margin-top: 3vw; }
+      .line .known { position: absolute; left: 0; top: 0; width: 70%; height: 1px; background: linear-gradient(90deg, rgba(34,211,238,.3), var(--cyan), var(--violet)); transform-origin: left; }
+      .line .future { position: absolute; left: 70%; top: 0; width: 45%; height: 1px; background: repeating-linear-gradient(90deg, var(--violet) 0 6px, transparent 6px 12px); -webkit-mask-image: linear-gradient(90deg, #000, transparent); mask-image: linear-gradient(90deg, #000, transparent); transform-origin: left; }
+      .line .now { position: absolute; left: 70%; top: -4px; width: 9px; height: 9px; margin-left: -4px; border-radius: 50%; background: var(--violet); box-shadow: 0 0 14px var(--violet); }
+      .active .known { animation: grow 1.4s cubic-bezier(.65,0,.35,1) both 0.4s; }
+      .active .future { animation: grow 2.2s cubic-bezier(.22,1,.36,1) both 1.8s; }
+      .active .now { animation: pop 0.5s ease both 1.7s; }
+      @keyframes grow { from { transform: scaleX(0); } }
+
+      /* Progress and controls */
+      .bottom { position: absolute; left: 4vw; right: 4vw; bottom: 3vw; display: flex; align-items: center; gap: 2vw; }
+      .track { position: relative; flex: 1; height: 1px; background: rgba(148,163,184,0.15); }
+      .fill { position: absolute; inset: 0; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, var(--cyan), var(--violet)); }
+      .ticks { position: absolute; inset: 0; display: flex; justify-content: space-between; }
+      .ticks button {
+        position: relative; width: 0.8vw; height: 0.8vw; min-width: 8px; min-height: 8px; margin-top: -0.4vw;
+        border-radius: 50%; border: 1px solid rgba(148,163,184,0.5); background: var(--bg); cursor: pointer;
+      }
+      .ticks button.done { border-color: var(--cyan); background: var(--cyan); }
+      .ticks button:focus-visible, .ctrl:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+      .ctrl {
+        display: inline-flex; align-items: center; justify-content: center; width: 2.6vw; height: 2.6vw; min-width: 26px; min-height: 26px;
+        border: 1px solid var(--hair); border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer;
+      }
+      .ctrl:hover { color: var(--fg); border-color: rgba(34,211,238,0.5); }
+      .ctrl svg { width: 45%; height: 45%; }
+      .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation: none !important; transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage" id="stage">
+      <div class="grid" aria-hidden="true"></div>
+      <div class="light" aria-hidden="true"></div>
+
+      <div class="top">
+        <p class="eyebrow">The evolution of an engineer</p>
+        <p class="year" id="year" aria-hidden="true"><span>2019</span></p>
+      </div>
+
+      <div id="scenes"></div>
+      <p class="sr" id="live" aria-live="polite"></p>
+
+      <div class="bottom">
+        <button class="ctrl" id="toggle" type="button" aria-label="Pause">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" id="toggle-icon"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        </button>
+        <div class="track" aria-hidden="false">
+          <div class="fill" id="fill"></div>
+          <div class="ticks" id="ticks" role="group" aria-label="Jump to scene"></div>
+        </div>
+        <button class="ctrl" id="replay" type="button" aria-label="Replay from 2019">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // Each scene: year label, accent (0 = cyan, 1 = violet), title, caption,
+      // tags, and an SVG drawing in a 400 × 260 space. Content mirrors src/data.
+      const SCENES = [
+        {
+          year: '2018', accent: 0, title: 'Sensors, circuits and first papers',
+          caption: 'Fault isolation on power lines, coal-mine safety and soil monitoring: three conference papers on embedded and IoT systems.',
+          tags: ['Embedded C', 'Arduino / AVR', 'IoT', 'Cloud'],
+          svg: `
+            <path class="s draw" d="M20 60h80v50h70v-40h90"/>
+            <path class="s draw d2" d="M20 170h50v40h110v-60h100"/>
+            <path class="m draw d3" d="M260 70h60v80h-40M280 150v60h90"/>
+            <rect class="box pop" x="250" y="50" width="56" height="40" rx="4"/>
+            <text class="sub fade" x="278" y="74" text-anchor="middle">AVR</text>
+            <circle class="dot pop" cx="100" cy="60" r="4"/><circle class="dot pop" cx="170" cy="110" r="4"/>
+            <circle class="dot pop" cx="70" cy="170" r="4"/><circle class="dot pop" cx="180" cy="210" r="4"/>
+            <circle class="dot pulse" cx="370" cy="210" r="5"/>
+            <text class="sub fade" x="370" y="236" text-anchor="middle">alert</text>`,
+        },
+        {
+          year: '2019', accent: 0.12, title: 'Inside an enterprise product',
+          caption: 'Full-stack features and POS integrations, fitted into an existing layered architecture.',
+          tags: ['Java · Jersey', 'Angular 8', 'SQL', 'Microservices'],
+          svg: `
+            <rect class="box slide" x="20" y="105" width="90" height="46" rx="6" style="animation-delay:.2s"/>
+            <text class="lbl fade" x="65" y="132" text-anchor="middle">Angular UI</text>
+            <rect class="boxa slide" x="150" y="40" width="140" height="42" rx="6" style="animation-delay:.5s"/>
+            <text class="lbl fade" x="220" y="66" text-anchor="middle">Business layer</text>
+            <rect class="boxa slide" x="150" y="107" width="140" height="42" rx="6" style="animation-delay:.7s"/>
+            <text class="lbl fade" x="220" y="133" text-anchor="middle">Application layer</text>
+            <rect class="boxa slide" x="150" y="174" width="140" height="42" rx="6" style="animation-delay:.9s"/>
+            <text class="lbl fade" x="220" y="200" text-anchor="middle">Data management</text>
+            <path class="m draw d2" d="M110 128h40M220 82v25M220 149v25M290 61h50M290 195h50"/>
+            <rect class="box pop" x="340" y="44" width="56" height="34" rx="4" stroke-dasharray="3 4"/>
+            <text class="sub fade" x="368" y="65" text-anchor="middle">POS</text>
+            <rect class="box pop" x="340" y="178" width="56" height="34" rx="17"/>
+            <text class="sub fade" x="368" y="199" text-anchor="middle">SQL</text>`,
+        },
+        {
+          year: '2020', accent: 0.25, title: 'First models',
+          caption: 'A journal paper on machine learning for warehouse management: ETL into a warehouse, regression and XGBoost models, D3.js dashboards.',
+          tags: ['ETL', 'Logistic regression', 'XGBoost', 'D3.js'],
+          svg: `
+            <path class="m" d="M30 230h350M30 230V20"/>
+            ${[[60,200],[85,185],[110,190],[130,160],[160,150],[185,140],[205,120],[235,115],[255,95],[285,85],[310,70],[340,52],[100,170],[220,135],[300,95]]
+              .map(([x,y],i)=>`<circle class="dot pop" cx="${x}" cy="${y}" r="3.2" style="animation-delay:${0.1+i*0.06}s;opacity:.85"/>`).join('')}
+            <path class="s draw d3" d="M45 212 C150 170 250 110 365 45" style="stroke-width:2"/>
+            <text class="sub fade" x="365" y="30" text-anchor="end" style="animation-delay:1.6s">fit · MAE / RMSE</text>`,
+        },
+        {
+          year: '2021', accent: 0.38, title: 'Performance as a design property',
+          caption: 'Redesigning how data moved through the backend: up to 83% performance improvement, and APIs serving 1000+ concurrent users.',
+          tags: ['React', 'Oracle', 'REST APIs', 'FastAPI'],
+          svg: `
+            <circle class="boxa pop" cx="200" cy="40" r="16"/>
+            <path class="m draw" d="M188 52 120 110M212 52l68 58"/>
+            <circle class="box pop" cx="120" cy="120" r="14"/><circle class="box pop" cx="280" cy="120" r="14"/>
+            <g class="prune"><path class="m" d="M110 132 70 190M130 132l20 58M270 132l-20 58"/>
+              <circle class="box" cx="70" cy="200" r="11"/><circle class="box" cx="150" cy="200" r="11"/><circle class="box" cx="250" cy="200" r="11"/></g>
+            <path class="m draw d2" d="M290 132l40 58"/>
+            <circle class="boxa pop" cx="330" cy="200" r="12" style="animation-delay:1.2s"/>
+            <text class="fade" x="80" y="250" style="font:500 22px 'JetBrains Mono',monospace;fill:var(--accent);animation-delay:1.8s">up to 83%</text>`,
+        },
+        {
+          year: '2022', accent: 0.5, title: 'Real-time collaboration',
+          caption: 'Re-architecting a peer-to-peer grid and a two-way Power BI writeback: designing how the parts of a product talk to each other.',
+          tags: ['Peer-to-peer grid', 'Mono-repo', 'Node.js', 'Power BI'],
+          svg: (() => {
+            const pts = [[80,60],[200,30],[320,60],[350,170],[230,230],[90,200],[200,130]];
+            let edges = '';
+            pts.forEach((a,i)=>pts.forEach((b,j)=>{ if (j>i) edges += `<path class="m draw" style="animation-delay:${0.2+((i+j)%6)*0.12}s" d="M${a[0]} ${a[1]}L${b[0]} ${b[1]}"/>`; }));
+            return edges + pts.map(([x,y],i)=>`<circle class="${i===6?'boxa':'box'} pop" cx="${x}" cy="${y}" r="${i===6?14:10}" style="animation-delay:${i*0.08}s"/>`).join('')
+              + `<circle class="dot flow" cx="80" cy="60" r="3.5" style="--dx:240px"/>`;
+          })(),
+        },
+        {
+          year: '2022', accent: 0.55, title: 'Data platforms, with models inside',
+          caption: 'A new direction at Tiger Analytics: incident intelligence with NLP and RLHF, and compliance reporting for 350+ investment funds at 50% lower cost.',
+          tags: ['Snowflake', 'NLP · RLHF', 'Azure Data Factory', 'Power Platform'],
+          svg: `
+            ${[['Sources',30,60],['Sources',30,180],['Ingest',140,120],['Validate',250,60],['Model',250,180],['Report',360,120]]
+              .map(([t,x,y],i)=>`<rect class="${i===2||i===3?'boxa':'box'} pop" x="${x-42}" y="${y-18}" width="84" height="36" rx="5" style="animation-delay:${i*0.12}s"/><text class="lbl fade" x="${x}" y="${y+4}" text-anchor="middle" style="animation-delay:${0.3+i*0.12}s">${t}</text>`).join('')}
+            <path class="m draw d2" d="M72 60 98 120M72 180l26-60M182 120l26-60M182 120l26 60M292 60l26 60M292 180l26-60"/>
+            <circle class="dot flow" cx="72" cy="120" r="3" style="--dx:250px;animation-delay:1s"/>
+            <circle class="dot flow" cx="72" cy="120" r="3" style="--dx:250px;animation-delay:1.9s"/>
+            <text class="sub fade" x="200" y="245" text-anchor="middle" style="animation-delay:1.4s">lineage · audit trail</text>`,
+        },
+        {
+          year: '2023', accent: 0.64, title: 'Enterprise automation at scale',
+          caption: 'A 20-year-old manual process replaced by 150+ APIs and 114 workflows, and trade automation that cut operational costs by 20–30%.',
+          tags: ['Power Apps', 'FastAPI', 'Azure SQL', 'Dataverse'],
+          svg: `
+            <rect class="box pop" x="10" y="100" width="70" height="60" rx="6"/>
+            <text class="sub fade" x="45" y="126" text-anchor="middle">manual</text>
+            <text class="sub fade" x="45" y="142" text-anchor="middle">process</text>
+            <path class="m draw" d="M80 130h40"/>
+            ${Array.from({length: 12}, (_, i) => { const x = 140 + (i % 4) * 34, y = 40 + Math.floor(i / 4) * 34;
+              return `<rect class="boxa pop" x="${x}" y="${y}" width="24" height="20" rx="3" style="animation-delay:${0.3 + i * 0.05}s"/>`; }).join('')}
+            <text class="sub fade" x="190" y="30" text-anchor="middle" style="animation-delay:.9s">150+ APIs</text>
+            ${[0,1,2,3].map(i => `<path class="s draw d2" d="M140 ${170 + i * 18}h150" style="animation-delay:${0.8 + i * 0.12}s"/>
+              <circle class="dot flow" cx="140" cy="${170 + i * 18}" r="2.6" style="--dx:150px;animation-delay:${1.4 + i * 0.3}s"/>`).join('')}
+            <text class="sub fade" x="215" y="250" text-anchor="middle" style="animation-delay:1.2s">114 workflows</text>
+            <path class="m draw d3" d="M300 130h30"/>
+            <rect class="box pop" x="330" y="105" width="64" height="50" rx="6" style="animation-delay:1.3s"/>
+            <text class="lbl fade" x="362" y="134" text-anchor="middle" style="animation-delay:1.4s">Reports</text>`,
+        },
+        {
+          year: '2024', accent: 0.75, title: 'Stepping up to Senior Lead',
+          caption: 'Three roles in two years at Tiger Analytics: Senior Software Engineer, Lead Engineer, then Senior Lead from July 2024.',
+          tags: ['Senior Software Engineer', 'Lead Engineer', 'Senior Lead'],
+          svg: `
+            ${[['Senior Software Engineer','Aug 2022',0],['Lead Engineer','Jul 2023',1],['Senior Lead','Jul 2024',2],['AI Architect','2026',3]]
+              .map(([t,d,i])=>{const x=20+i*92, y=200-i*50, cur=i===2, next=i===3;
+                return `<rect class="${cur?'boxa':'box'} pop" x="${x}" y="${y}" width="${next?84:150}" height="38" rx="5" ${next?'stroke-dasharray="3 4"':''} style="animation-delay:${0.2+i*0.3}s"/>`
+                  + `<text class="lbl fade" x="${x+10}" y="${y+17}" style="animation-delay:${0.35+i*0.3}s">${t}</text>`
+                  + `<text class="sub fade" x="${x+10}" y="${y+31}" style="animation-delay:${0.4+i*0.3}s">${d}</text>`;}).join('')}
+            <path class="s draw d2" d="M95 200V170h92M187 150V120h92M279 100V70h66" />
+            <circle class="dot pulse" cx="296" cy="119" r="4"/>`,
+        },
+        {
+          year: '2025', accent: 0.86, title: 'Retrieval and orchestration',
+          caption: 'A RAG platform where answers pass human review before use, and orchestration frameworks over enterprise data.',
+          tags: ['RAG', 'Azure AI', 'LangGraph', 'AutoGen'],
+          svg: `
+            ${[0,1,2].map(i=>`<rect class="box slide" x="${10+i*6}" y="${40+i*6}" width="44" height="56" rx="3" style="animation-delay:${i*0.1}s"/>`).join('')}
+            <text class="sub fade" x="38" y="122" text-anchor="middle">docs</text>
+            <rect class="boxa pop" x="96" y="50" width="70" height="36" rx="18" style="animation-delay:.3s"/>
+            <text class="lbl fade" x="131" y="72" text-anchor="middle" style="animation-delay:.4s">Index</text>
+            <rect class="box pop" x="10" y="170" width="70" height="36" rx="5" style="animation-delay:.5s"/>
+            <text class="lbl fade" x="45" y="192" text-anchor="middle" style="animation-delay:.6s">Ticket</text>
+            <rect class="boxa pop" x="120" y="170" width="80" height="36" rx="5" style="animation-delay:.7s"/>
+            <text class="lbl fade" x="160" y="192" text-anchor="middle" style="animation-delay:.8s">Retrieve</text>
+            <circle class="boxa pop" cx="262" cy="188" r="24" style="animation-delay:.9s"/>
+            <text class="lbl fade" x="262" y="192" text-anchor="middle" style="animation-delay:1s">LLM</text>
+            <circle class="box pop" cx="362" cy="188" r="22" stroke-dasharray="3 4" style="animation-delay:1.1s"/>
+            <text class="sub fade" x="362" y="228" text-anchor="middle" style="animation-delay:1.2s">human review</text>
+            <path class="m draw" d="M60 68h36M80 188h40M131 86l20 84M200 188h38M286 188h54"/>
+            <path class="s draw d3" d="M362 166 C362 70 260 40 166 62" stroke-dasharray="4 5"/>
+            <text class="sub fade" x="300" y="70" text-anchor="middle" style="animation-delay:1.6s">feedback</text>
+            <circle class="dot flow" cx="80" cy="188" r="3" style="--dx:260px;animation-delay:1.2s"/>`,
+        },
+        {
+          year: '2026', accent: 1, title: 'Agents in production',
+          caption: 'A conversational IVR that keeps personal data away from people, agent assist for support teams, and AI-assisted engineering measured with an LLM evaluator.',
+          tags: ['Copilot Studio', 'GPT-5', 'Dynamics 365', 'LLM evaluation'],
+          svg: `
+            ${[0,1,2].map(i=>`<rect class="box slide" x="${18+i*6}" y="${92+i*6}" width="48" height="60" rx="3" style="animation-delay:${i*0.1}s"/>`).join('')}
+            <path class="s draw" d="M80 130h80"/>
+            <circle class="dot flow" cx="80" cy="130" r="3" style="--dx:80px;animation-delay:.8s"/>
+            <circle class="boxa pop" cx="200" cy="130" r="30" style="animation-delay:.4s"/>
+            <text class="lbl fade" x="200" y="134" text-anchor="middle">LLM</text>
+            <circle class="m fade" cx="200" cy="130" r="92" stroke-dasharray="2 6"/>
+            <g class="orbit">${[0,72,144,216,288].map(d=>{const r=d*Math.PI/180,x=200+Math.cos(r)*92,y=130+Math.sin(r)*92;return `<g class="counter"><circle class="box" cx="${x}" cy="${y}" r="13"/><circle class="dot" cx="${x}" cy="${y}" r="3.5"/></g>`;}).join('')}</g>
+            <text class="sub fade" x="200" y="252" text-anchor="middle" style="animation-delay:1s">agents · tools · orchestration</text>
+            <circle class="box pop" cx="360" cy="130" r="16" stroke-dasharray="3 4" style="animation-delay:1.2s"/>
+            <text class="sub fade" x="360" y="166" text-anchor="middle" style="animation-delay:1.3s">review</text>
+            <path class="m draw d4" d="M292 130h52"/>`,
+        },
+        { year: '2026 →', accent: 1, finale: true, title: 'Still evolving', caption: 'Still building. Still learning. Still evolving.' },
+      ];
+      const SCENE_MS = 3600;
+      const FINALE_MS = 4800;
+
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const root = document.documentElement;
+      const scenesEl = document.getElementById('scenes');
+      const ticksEl = document.getElementById('ticks');
+      const yearEl = document.getElementById('year');
+      const fill = document.getElementById('fill');
+      const live = document.getElementById('live');
+      const toggle = document.getElementById('toggle');
+      const toggleIcon = document.getElementById('toggle-icon');
+
+      const mix = (t) => {
+        const a = [34, 211, 238], b = [139, 124, 246];
+        return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(' ')})`;
+      };
+
+      SCENES.forEach((s, i) => {
+        const el = document.createElement('section');
+        el.className = 'scene' + (s.finale ? ' finale' : '');
+        el.setAttribute('aria-hidden', 'true');
+        el.innerHTML = s.finale
+          ? `<div><h2>${s.title}</h2><p class="caption">${s.caption}</p><div class="line"><span class="known"></span><span class="now"></span><span class="future"></span></div></div>`
+          : `<div><p class="phase-no">${String(i + 1).padStart(2, '0')} / ${String(SCENES.length - 1).padStart(2, '0')}</p>
+               <h2>${s.title}</h2><p class="caption">${s.caption}</p>
+               <ul class="tags">${s.tags.map((t) => `<li>${t}</li>`).join('')}</ul></div>
+             <div class="visual"><svg viewBox="0 0 400 260" aria-hidden="true">${s.svg}</svg></div>`;
+        scenesEl.appendChild(el);
+
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('aria-label', `${s.year}: ${s.title}`);
+        b.addEventListener('click', () => { show(i); if (playing) schedule(); });
+        ticksEl.appendChild(b);
+      });
+
+      const sceneEls = [...scenesEl.children];
+      const tickEls = [...ticksEl.children];
+      let current = -1;
+      let playing = !reduce;
+      let timer = null;
+
+      function show(i) {
+        current = i;
+        const s = SCENES[i];
+        sceneEls.forEach((el, j) => {
+          el.classList.remove('active');
+          el.setAttribute('aria-hidden', String(j !== i));
+        });
+        void sceneEls[i].offsetWidth; // restart CSS animations
+        sceneEls[i].classList.add('active');
+        root.style.setProperty('--accent', mix(s.accent));
+        yearEl.innerHTML = `<span>${s.year}</span>`;
+        fill.style.transition = reduce ? 'none' : 'transform 0.8s cubic-bezier(.22,1,.36,1)';
+        fill.style.transform = `scaleX(${i / (SCENES.length - 1)})`;
+        tickEls.forEach((t, j) => t.classList.toggle('done', j <= i));
+        live.textContent = `${s.year}. ${s.title}. ${s.caption}`;
+      }
+
+      function schedule() {
+        clearTimeout(timer);
+        const ms = SCENES[current].finale ? FINALE_MS : SCENE_MS;
+        timer = setTimeout(() => {
+          show((current + 1) % SCENES.length);
+          schedule();
+        }, ms);
+      }
+
+      function setPlaying(p) {
+        playing = p;
+        toggle.setAttribute('aria-label', p ? 'Pause' : 'Play');
+        toggleIcon.innerHTML = p
+          ? '<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>'
+          : '<path d="M8 5v14l11-7z"/>';
+        // Pausing holds the current scene; its entrance animation still finishes.
+        p ? schedule() : clearTimeout(timer);
+      }
+
+      toggle.addEventListener('click', () => setPlaying(!playing));
+      document.getElementById('replay').addEventListener('click', () => { show(0); setPlaying(true); });
+
+      // Pause while the tab is hidden.
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) clearTimeout(timer);
+        else if (playing) schedule();
+      });
+
+      show(0);
+      setPlaying(playing);
+    </script>
+  </body>
+</html>

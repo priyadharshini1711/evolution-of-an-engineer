@@ -1,0 +1,373 @@
+import type { IntroConcept, Milestone } from './types';
+
+/**
+ * Concepts shown during the intro year counter. Each appears once the counter
+ * reaches its year; several concepts in one year play in order.
+ */
+export const introConcepts: IntroConcept[] = [
+  { year: 2019, label: 'Embedded & IoT Prototypes' },
+  { year: 2019, label: 'Full-Stack Engineering' },
+  { year: 2020, label: 'Machine Learning Foundations' },
+  { year: 2020, label: 'Data Products' },
+  { year: 2021, label: 'Performance Engineering' },
+  { year: 2022, label: 'Product Architecture' },
+  { year: 2023, label: 'Data & AI Platforms' },
+  { year: 2024, label: 'Enterprise Automation' },
+  { year: 2025, label: 'Retrieval & Orchestration' },
+  { year: 2026, label: 'Agentic Systems' },
+];
+
+/**
+ * One milestone per calendar year. When a role spans two years, its work is
+ * shown in the year the role was mostly active; those placements are marked
+ * 'needs-review' until confirmed.
+ */
+const TIGER = { name: 'Tiger Analytics', descriptor: 'an AI and analytics consultancy' };
+
+export const milestones: Milestone[] = [
+  {
+    id: 'y2018',
+    navLabel: '2018',
+    year: '2018',
+    period: '2017 – early 2019 · undergraduate',
+    phase: 'Prototypes, papers and first systems',
+    org: { name: 'Velammal Engineering College', descriptor: 'B.E. Computer Science & Engineering' },
+    roles: ['Student', 'Intern project developer · Bluearise Technologies (2018)'],
+    technologies: ['C', 'C++', 'Java', 'Java Swing', 'Python', 'PostgreSQL', 'Dialogflow', 'PHP', 'JavaScript', 'HTML / CSS', 'Angular 7', 'MySQL', 'Oracle', 'IoT', 'Cloud'],
+    building: [
+      'IoT prototypes: a bus tracker over a mesh network, a power-line break detector that cuts supply only at the failed segment, and a soil sensor that estimates pesticide presence from CO₂ and SO₂ emissions.',
+      'Data Pipette: a Python and PostgreSQL application that brings electronic medical records from hospitals with different schemas into one central database, with a Dialogflow conversational interface.',
+      'Three conference papers on embedded, IoT and cloud monitoring systems (Mar 2018 – Feb 2019).',
+      'Java web applications and Java Swing desktop applications as an intern at Bluearise Technologies.',
+    ],
+    challenges: [
+      'Each hospital system stored records under a different schema.',
+      'Locating a power-line failure at its exact position.',
+    ],
+    details: [
+      'NPTEL courses: Introduction to Modern Application Development, Cloud Computing, Distributed Systems.',
+      'In-plant training covering Hadoop and cloud computing; workshops on Android, MATLAB, Selenium and manual testing.',
+    ],
+    reflection: {
+      status: 'verified',
+      learned: ['Small hardware projects made the whole path visible: sensor, network, cloud, user.'],
+      thinking: 'The question was whether it works end to end.',
+    },
+    motif: 'circuit',
+    accent: 0,
+    status: 'verified',
+    reviewNote: 'Bluearise dates: Jan – Dec 2018 (LinkedIn), confirmed by you over Resume 1’s "from May 2018".',
+    sources: [
+      { doc: 'R1', locator: 'Mini Projects; Conferences; Internship' },
+      { doc: 'R2', locator: 'Technical Skills; Projects; Technical Conferences' },
+      { doc: 'P1', locator: 'Paper' },
+      { doc: 'P2', locator: 'Paper' },
+      { doc: 'P3', locator: 'Paper' },
+      { doc: 'L1', locator: 'Experience › Bluearise Technologies' },
+    ],
+  },
+  {
+    id: 'y2019',
+    navLabel: '2019',
+    year: '2019',
+    period: 'Jul 2019 – Mar 2020',
+    phase: 'Enterprise software foundations',
+    org: { name: 'GoFrugal Technologies', descriptor: 'a retail point-of-sale software company' },
+    roles: ['Java Developer Intern'],
+    technologies: ['Java (Jersey)', 'Angular 8', 'SQL', 'Microservices'],
+    building: [
+      'Full-stack features for the HQ product in Java (Jersey) and Angular 8.',
+      'Inbound and outbound integrations with the base POS products.',
+      'Feature add-ons and bug fixes across the business, application and data-management layers.',
+    ],
+    challenges: [
+      'Changes had to fit an existing layered architecture.',
+      'Integrations had to work in both directions with products already in the field.',
+    ],
+    details: [
+      'Developed and tested product features with microservices.',
+      'Earlier in 2019: Smart India Hackathon finalist as team leader (March), and team leader of the Cognizant Student Club (Feb – Dec).',
+    ],
+    reflection: {
+      status: 'verified',
+      learned: ['Code now lived inside a system someone else had designed, with its own layers and contracts.'],
+      thinking: 'From "does my project work" to "does my change fit the product".',
+    },
+    motif: 'layers',
+    accent: 0.1,
+    status: 'verified',
+    sources: [
+      { doc: 'R4', locator: 'Work Experience › GoFrugal' },
+      { doc: 'R5', locator: 'Experience › Java Developer Intern' },
+      { doc: 'L1', locator: 'Experience › GOFRUGAL; Cognizant Student Club' },
+    ],
+  },
+  {
+    id: 'y2020',
+    navLabel: '2020',
+    year: '2020',
+    period: 'Apr – Dec 2020',
+    phase: 'First models, first data product',
+    org: { name: 'Visual BI Solutions (now Lumel)', descriptor: 'a business-intelligence product company' },
+    roles: ['BI Developer Trainee'],
+    technologies: ['React', 'Tailwind CSS', 'Oracle RDBMS', 'SQL', 'ETL', 'Logistic regression', 'XGBoost', 'D3.js'],
+    building: [
+      'Co-authored a journal paper (accepted Apr 2020) on ML-based warehouse management: ETL into a data warehouse, regression and XGBoost models for stock and sales, D3.js dashboards.',
+      'Migrated the product’s Admin Console, converting class components to functional components with Tailwind CSS.',
+      'Added Oracle RDBMS support to the application.',
+      'Full-stack features for customers of the BI product.',
+    ],
+    challenges: [
+      'Bringing data from several business systems into one model-ready warehouse.',
+      'Migrating a live admin console without changing its behaviour.',
+    ],
+    details: ['Graduated in 2020 (B.E. Computer Science and Engineering).'],
+    reflection: {
+      status: 'verified',
+      learned: ['A model is only as good as the pipeline that feeds it.'],
+      thinking: 'From building screens to building on data.',
+    },
+    motif: 'scatter',
+    accent: 0.22,
+    status: 'verified',
+    sources: [
+      { doc: 'R4', locator: 'Work Experience › BI Developer Trainee' },
+      { doc: 'P4', locator: 'Abstract; Proposed System' },
+      { doc: 'L1', locator: 'Experience › BI Developer Trainee' },
+    ],
+  },
+  {
+    id: 'y2021',
+    navLabel: '2021',
+    year: '2021',
+    period: 'Jan – Dec 2021',
+    phase: 'Performance, then product engineering',
+    org: { name: 'Visual BI Solutions → Lumel', descriptor: 'a business-intelligence product company' },
+    roles: ['BI Developer (Jan – Jul)', 'Product Developer (Aug – Dec)'],
+    technologies: ['Python', 'FastAPI', 'REST APIs', 'JavaScript', 'SQL', 'Third-party APIs'],
+    building: [
+      'Redesigned backend processing and data transformation for a measured performance improvement.',
+      'Data integration and metrics derivation over large customer data, including secured third-party API routes.',
+      'A product revamp: management screens with authentication, backed by FastAPI.',
+      'REST APIs serving the front end from dynamically chosen user inputs.',
+    ],
+    challenges: [
+      'Backend processing that limited product performance.',
+      'High-volume concurrent users.',
+    ],
+    metrics: [
+      { value: 'up to 83%', label: 'backend performance improvement' },
+      { value: '1000+', label: 'concurrent users served by the REST APIs' },
+    ],
+    details: [
+      'The improvement came from query optimisation, workflow redesign and changes to data transformation.',
+      'Trained and mentored new team members on backend development and the deployment cycle.',
+    ],
+    reflection: {
+      status: 'verified',
+      learned: ['Performance was decided by how data moved through the backend, not by any single line of code.'],
+      thinking: 'Starting to ask where the time goes before asking what to build.',
+    },
+    motif: 'query-tree',
+    accent: 0.34,
+    status: 'verified',
+    sources: [
+      { doc: 'R4', locator: 'Work Experience › BI Developer; Product Developer' },
+      { doc: 'R5', locator: 'Experience › Lumel, bullets 4–5' },
+      { doc: 'L1', locator: 'Experience › BI Developer; Product Developer' },
+    ],
+  },
+  {
+    id: 'y2022',
+    navLabel: '2022',
+    year: '2022',
+    period: 'Jan – Dec 2022',
+    phase: 'From product architecture to data platforms',
+    roles: [
+      'Senior Product Developer · Lumel, a business-intelligence product company (Jan – Jul)',
+      'Senior Software Engineer · Tiger Analytics, an AI and analytics consultancy (from Aug)',
+    ],
+    technologies: ['React', 'Node.js', 'TypeScript', 'Power BI', 'SingleStore', 'Mono-repo', 'Snowflake', 'NLP models', 'RLHF', 'Power Platform', 'Azure Data Factory', 'Azure Functions'],
+    building: [
+      'At Lumel: re-architected a peer-to-peer grid for the product’s collaborative environment, and carried a visual-modelling product into a mono-repo.',
+      'At Lumel: a Power BI writeback framework for two-way sync between dashboards and enterprise databases.',
+      'At Tiger Analytics: an AI-powered ETL and incident-intelligence platform where NLP models and RLHF pipelines classify incidents for legal risk.',
+      'Portfolio-drift analytics and regulatory reporting for investment funds.',
+      'A mobile-first sustainability-compliance platform and a buy/sell analytics platform.',
+    ],
+    challenges: [
+      'Keeping dashboards and databases consistent in both directions.',
+      'Incident classification where false positives carry legal cost.',
+    ],
+    metrics: [
+      { value: '350+', label: 'investment funds with automated compliance reporting' },
+      { value: '50%', label: 'lower operational cost on the drift-reporting platform' },
+    ],
+    details: [
+      'The incident platform integrated Snowflake, SQL Server and AgilePoint, and was the first time models ran inside a production data pipeline.',
+      'Analytics work at Lumel across Power BI, SQL, SingleStore and Oracle RDBMS.',
+    ],
+    reflection: {
+      status: 'verified',
+      learned: ['Collaboration features and data platforms fail the same way: two parts of the system disagree about the truth.'],
+      thinking: 'From building products to building systems that run other people’s processes.',
+    },
+    motif: 'mesh',
+    accent: 0.46,
+    status: 'verified',
+    sources: [
+      { doc: 'R4', locator: 'Work Experience › Senior Product Developer' },
+      { doc: 'R5', locator: 'Experience › Lumel; Tiger Analytics' },
+      { doc: 'L1', locator: 'Experience › Lumel; Tiger Analytics › Senior Software Engineer' },
+    ],
+  },
+  {
+    id: 'y2023',
+    navLabel: '2023',
+    year: '2023',
+    period: 'Jan – Dec 2023',
+    phase: 'Enterprise automation at scale',
+    org: TIGER,
+    roles: ['Senior Software Engineer (to Jul)', 'Lead Engineer (from Jul)'],
+    technologies: ['Power Apps', 'Power Automate', 'FastAPI', 'Azure SQL', 'Azure Data Factory', 'Snowflake', 'React', 'TypeScript', 'Dataverse'],
+    building: [
+      'Modernisation of a 20-year-old manual process for a Fortune 500 client, through 150+ APIs and 114 workflows.',
+      'A trade-automation platform with real-time synchronisation engines.',
+      'A prospect-intelligence platform with audit and governance controls (React, TypeScript, Snowflake, Python services).',
+      'A centralised Report Publisher for automated scheduling and self-service administration.',
+    ],
+    challenges: [
+      'Replacing a long-standing manual process without breaking the business that relies on it.',
+      'Keeping systems synchronised in real time while staying compliant.',
+    ],
+    metrics: [
+      { value: '150+ / 114', label: 'APIs / workflows in the legacy modernisation' },
+      { value: '20–30%', label: 'lower operational cost from trade automation' },
+      { value: '5–10%', label: 'improvement in portfolio returns' },
+      { value: '100%', label: 'compliance on the trade-automation platform' },
+    ],
+    details: [
+      'Promoted to Lead Engineer in July 2023.',
+      'Report Publisher: API-driven orchestration and standardised reporting governance on Power Platform and Dataverse.',
+    ],
+    reflection: {
+      status: 'verified',
+      learned: ['Automation at this scale is mostly about contracts between systems: APIs, schedules, ownership.'],
+      thinking: 'Designing for the people and processes around the software, not only the software.',
+    },
+    motif: 'flows',
+    accent: 0.58,
+    status: 'verified',
+    sources: [
+      { doc: 'L1', locator: 'Experience › Tiger Analytics › Lead Engineer' },
+      { doc: 'R5', locator: 'Experience › Tiger Analytics' },
+    ],
+  },
+  {
+    id: 'y2024',
+    navLabel: '2024',
+    year: '2024',
+    period: 'Jan – Dec 2024',
+    phase: 'Stepping up to Senior Lead',
+    org: TIGER,
+    roles: ['Lead Engineer (to Aug)', 'Senior Lead Engineer (from Jul)'],
+    technologies: [],
+    building: [
+      'Continued as Lead Engineer through August.',
+      'Promoted to Senior Lead Engineer in July: the third role in two years, after Senior Software Engineer (Aug 2022) and Lead Engineer (Jul 2023).',
+    ],
+    challenges: [],
+    details: [],
+    reflection: {
+      status: 'verified',
+      learned: ['Each step up moved the work further from writing every part and closer to deciding how the parts fit.'],
+      thinking: 'From owning a platform to owning how several platforms are built.',
+    },
+    motif: 'layers',
+    accent: 0.7,
+    status: 'verified',
+    reviewNote: 'Confirmed by you: 2024 is the promotion year, with no project of its own.',
+    sources: [{ doc: 'L1', locator: 'Experience › Tiger Analytics (role dates)' }],
+  },
+  {
+    id: 'y2025',
+    navLabel: '2025',
+    year: '2025',
+    period: 'Jan – Dec 2025',
+    phase: 'Retrieval, orchestration and governed platforms',
+    org: TIGER,
+    roles: ['Senior Lead Engineer'],
+    technologies: ['RAG', 'Azure AI services', 'LangChain', 'LangGraph', 'AutoGen', 'n8n', 'Databricks', 'Microsoft Fabric', 'Power BI', 'Tableau'],
+    building: [
+      'Contributed to a RAG document-support platform for a global consumer-goods company: automated indexing and contextual retrieval to answer SME support tickets, with human-in-the-loop validation.',
+      'AI orchestration and automation frameworks with LangChain, LangGraph, AutoGen and n8n over Databricks, Snowflake, Azure Functions and Power Platform.',
+      'A regulatory-reporting automation platform with audit-ready lineage: 20+ Power Apps screens, 50 cloud flows, 18 Databricks jobs.',
+      'A forecasting platform that replaced Excel/SharePoint workflows with validation, error handling and "what-if" simulation.',
+      'Power BI, Tableau and Microsoft Fabric admin automation through API-driven orchestration.',
+    ],
+    challenges: [
+      'AI-generated answers needed human validation before use.',
+      'Regulatory reporting that had to be auditable end to end.',
+    ],
+    metrics: [
+      { value: 'up to 85%', label: 'less manual BI administration' },
+      { value: '~260 h', label: 'operational hours saved per year' },
+    ],
+    details: ['The RAG platform fed review outcomes back through continuous-learning loops.'],
+    reflection: {
+      status: 'verified',
+      learned: ['A model’s answer is one step in a system; review, feedback and retrieval quality decide whether it is useful.'],
+      thinking: 'Evaluating the system around the model, not only the output.',
+    },
+    motif: 'retrieval',
+    accent: 0.85,
+    status: 'verified',
+    sources: [
+      { doc: 'L1', locator: 'Experience › Tiger Analytics › Senior Lead' },
+      { doc: 'R5', locator: 'Experience › Tiger Analytics' },
+    ],
+  },
+  {
+    id: 'y2026',
+    navLabel: '2026',
+    year: '2026',
+    period: 'Jan 2026 – present',
+    phase: 'Agentic systems and AI architecture',
+    org: TIGER,
+    roles: ['Lead AIML Engineer / AI Architect'],
+    technologies: ['GPT-5', 'Azure OpenAI', 'Copilot Studio', 'Dynamics 365', 'Dataverse', 'AI Builder', 'GitHub Copilot', 'LLM evaluation'],
+    building: [
+      'Architected a conversational IVR (GPT-5, Copilot Studio, Dynamics 365, Dataverse) that keeps callers’ personal data away from human handling.',
+      'An agent-assist platform giving support agents real-time contextual information (Dynamics 365, AI Builder, Dataverse).',
+      'GenAI and agentic automation of KPI validation and reporting across Power BI, Tableau and PowerPoint.',
+      'Led a GitHub Copilot workshop for a European enterprise client (custom skills, instructions and tools) and assessed repositories with an in-house framework built on an LLM evaluator.',
+    ],
+    challenges: [
+      'Automating service requests without exposing personal data to people.',
+      'Measuring AI-assisted engineering with an evaluation framework rather than impressions.',
+    ],
+    metrics: [
+      { value: '200K+', label: 'requests a year automated by the conversational IVR' },
+      { value: '~97%', label: 'IVR accuracy' },
+      { value: '20–30%', label: 'shorter average handle time with Agent Assist' },
+      { value: '90K+', label: 'follow-up calls avoided per year' },
+      { value: '8+', label: 'projects enabled by the GitHub Copilot workshop' },
+    ],
+    details: [
+      'Leads and mentors cross-functional teams of 8+ developers, including architecture governance and technical decision-making.',
+      'Skills listed but not tied to a documented project: MCP, guardrails, AI observability, context engineering.',
+    ],
+    reflection: {
+      status: 'verified',
+      learned: ['With agents, the hard questions are about boundaries: what each agent may see, call and decide.'],
+      thinking: 'Designing for reliability, data boundaries and evaluation before capability.',
+    },
+    motif: 'agents',
+    accent: 1,
+    status: 'verified',
+    sources: [
+      { doc: 'L1', locator: 'Experience › Tiger Analytics › Lead AIML Engineer | AI Architect' },
+      { doc: 'R5', locator: 'Experience › Tiger Analytics, bullets 1–4, 15' },
+    ],
+  },
+];

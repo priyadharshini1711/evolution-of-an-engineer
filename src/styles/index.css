@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #07090c;
+  --cyan: #22d3ee;
+  --violet: #8b7cf6;
+  --grid: rgba(148, 163, 184, 0.06);
+  --hairline: rgba(148, 163, 184, 0.14);
+  --accent: var(--cyan);
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-ink-950 font-sans text-fg antialiased;
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: rgba(34, 211, 238, 0.25);
+  }
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    background: var(--cyan);
+    color: #07090c;
+    font-weight: 600;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+
+  .glass {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+    border: 1px solid var(--hairline);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.22em] text-fg-muted;
+  }
+
+  .tag {
+    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 font-mono text-[11px] leading-5 text-fg-muted;
+    border-color: var(--hairline);
+  }
+
+  .section {
+    @apply relative mx-auto w-full max-w-6xl px-4 py-24 sm:px-8 md:py-36;
+  }
+}
+
+/* Engineering grid. The drift runs on the compositor (transform only). */
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 85%);
+}
+.grid-bg::before {
+  content: '';
+  position: absolute;
+  inset: -64px;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 64px 64px;
+  animation: grid-drift 24s linear infinite;
+  will-change: transform;
+}
+@keyframes grid-drift {
+  to {
+    transform: translate3d(64px, 64px, 0);
+  }
+}
+
+/* Architecture diagrams: edges draw in, packets travel along them. */
+.diagram-edge {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.is-drawn .diagram-edge {
+  stroke-dashoffset: 0;
+}
+.diagram-node {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+.is-drawn .diagram-node {
+  opacity: 1;
+  transform: none;
+}
+.packet {
+  offset-rotate: 0deg;
+  animation: packet 3.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  opacity: 0;
+}
+@keyframes packet {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+/* Technology graph nodes fade and scale with CSS, not per-frame JS. */
+.graph-node {
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.graph-edge {
+  transition:
+    opacity 0.7s ease,
+    stroke 0.3s ease;
+}
+
+/* The closing line extends past the edge of the page. */
+@keyframes extend {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Low-power and reduced-motion: switch off decorative motion. */
+.low-power .grid-bg::before,
+.low-power .packet {
+  animation: none;
+}
+.low-power .packet {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .grid-bg::before,
+  .packet,
+  .animate-extend,
+  .animate-pulse-dot {
+    animation: none !important;
+  }
+  .packet {
+    display: none;
+  }
+  .diagram-edge {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+  .diagram-node {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .graph-node,
+  .graph-edge {
+    transition: none;
+  }
+}
